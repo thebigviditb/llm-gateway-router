@@ -1,0 +1,364 @@
+<title>Gateway Router Traceability</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #F6F8F6;
+    --bg-2: #ECF0EC;
+    --ink: #1B2320;
+    --ink-2: #4A5652;
+    --rule: #D3DAD5;
+    --accent: #0E6E5C;
+    --accent-soft: #DCEFE9;
+    --warn: #A66A0F;
+    --warn-soft: #F6EBD3;
+    --code-bg: #E9EEEA;
+    --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    --display: "Sora", "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121816; --bg-2: #192220; --ink: #E4EAE6; --ink-2: #A3B0AA; --rule: #2C3833;
+      --accent: #4FC3A9; --accent-soft: #163730; --warn: #E0A648; --warn-soft: #3A2C12; --code-bg: #1E2A26;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121816; --bg-2: #192220; --ink: #E4EAE6; --ink-2: #A3B0AA; --rule: #2C3833;
+    --accent: #4FC3A9; --accent-soft: #163730; --warn: #E0A648; --warn-soft: #3A2C12; --code-bg: #1E2A26;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.55; margin: 0; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 40px 24px 96px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+  @media (max-width: 820px) { .wrap { grid-template-columns: 1fr; gap: 24px; } nav.toc { position: static; } }
+  nav.toc { position: sticky; top: 24px; align-self: start; font-size: 14.5px; }
+  nav.toc .eyebrow { margin-bottom: 10px; }
+  nav.toc a { display: block; color: var(--ink-2); text-decoration: none; padding: 5px 0 5px 12px; border-left: 2px solid var(--rule); }
+  nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); border-left-color: var(--accent); outline: none; }
+  nav.toc a.sub { padding-left: 24px; font-size: 13.5px; }
+  .eyebrow { font-family: var(--display); font-size: 11.5px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-family: var(--display); font-size: 34px; font-weight: 700; line-height: 1.15; margin: 6px 0 12px; text-wrap: balance; letter-spacing: -0.01em; }
+  h2 { font-family: var(--display); font-size: 22px; font-weight: 600; margin: 0 0 6px; text-wrap: balance; }
+  h3 { font-family: var(--display); font-size: 15px; font-weight: 600; margin: 22px 0 8px; color: var(--ink); }
+  p { margin: 0 0 12px; max-width: 68ch; }
+  .lede { font-size: 18.5px; color: var(--ink-2); max-width: 64ch; }
+  section.req { border-top: 1px solid var(--rule); padding: 34px 0 10px; margin-top: 14px; }
+  .req-head { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
+  .req-num { font-family: var(--display); font-weight: 700; font-size: 26px; color: var(--accent); line-height: 1.1; padding-top: 2px; }
+  blockquote.spec { margin: 10px 0 0; padding: 12px 16px; background: var(--bg-2); border-left: 3px solid var(--accent); font-style: italic; color: var(--ink-2); max-width: 70ch; }
+  blockquote.spec p { margin: 0; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px 32px; }
+  ul { padding-left: 20px; margin: 0 0 12px; max-width: 70ch; }
+  li { margin-bottom: 6px; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+  pre { font-family: var(--mono); font-size: 13.5px; line-height: 1.5; background: var(--code-bg); padding: 14px 16px; border-radius: 4px; overflow-x: auto; margin: 0 0 14px; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .loc { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12.5px; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 3px; white-space: nowrap; margin: 2px 6px 2px 0; }
+  .locs { margin: 6px 0 12px; display: flex; flex-wrap: wrap; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 0 0 14px; }
+  .tablewrap { overflow-x: auto; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: var(--display); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+  td:first-child { font-family: var(--mono); font-size: 13.5px; white-space: nowrap; }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; }
+  .qa { border-left: 2px solid var(--rule); padding-left: 16px; margin: 0 0 14px; max-width: 70ch; }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .qa .a { color: var(--ink-2); margin: 0; }
+  .callout { background: var(--warn-soft); border-left: 3px solid var(--warn); padding: 12px 16px; margin: 14px 0; max-width: 70ch; }
+  .callout .eyebrow { color: var(--warn); }
+  .callout p { margin: 4px 0 0; }
+  .flow { display: grid; grid-template-columns: 28px 1fr; gap: 0 14px; margin: 14px 0 20px; max-width: 70ch; }
+  .flow .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); margin: 8px auto 0; position: relative; }
+  .flow .dot::after { content: ""; position: absolute; left: 5px; top: 12px; width: 2px; height: 44px; background: var(--rule); }
+  .flow .dot.last::after { display: none; }
+  .flow .step { padding-bottom: 18px; }
+  .flow .step b { font-family: var(--display); font-weight: 600; font-size: 15px; }
+  .flow .step span { display: block; color: var(--ink-2); font-size: 15px; }
+  .pitch { background: var(--bg-2); padding: 18px 22px; border-radius: 4px; margin: 18px 0 8px; max-width: 72ch; }
+  .pitch p { margin: 0 0 8px; }
+  .pitch p:last-child { margin: 0; }
+  .muted { color: var(--ink-2); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <div class="eyebrow">Contents</div>
+    <a href="#pitch">The 60-second pitch</a>
+    <a href="#lifecycle">One request, end to end</a>
+    <a href="#r1">R1 Sliding-window limiter</a>
+    <a href="#r1-window" class="sub">Window and eviction</a>
+    <a href="#r1-tokens" class="sub">Token accounting</a>
+    <a href="#r1-concurrency" class="sub">Concurrency</a>
+    <a href="#r2">R2 Failover</a>
+    <a href="#r3">R3 Error sanitization</a>
+    <a href="#r4">R4 SQLite on disk</a>
+    <a href="#criteria">Evaluation criteria map</a>
+    <a href="#tradeoffs">Trade-offs to volunteer</a>
+    <a href="#tests">Test inventory</a>
+  </nav>
+
+  <main>
+    <div class="eyebrow">Task 4 · LLM Gateway</div>
+    <h1>Every requirement, and the code that satisfies it</h1>
+    <p class="lede">A traceability guide for the rate-limiting and model-fallback router. Each requirement is quoted from the brief, mapped to the mechanism that meets it, the exact lines, the tests that prove it, and the questions an interviewer is likely to ask.</p>
+
+    <div id="pitch" class="pitch">
+      <div class="eyebrow">The 60-second pitch</div>
+      <p>The gateway sits in front of two model providers. Before it calls anything, it reserves the worst-case token cost of the request in a SQLite ledger inside a write-locked transaction, so concurrent requests can't jointly overshoot the tenant's 50k-per-minute budget. It then calls the primary provider under a hard 3-second deadline. If the primary returns 429, times out, or errors, the router cancels it and calls the secondary. When a response arrives, the reservation is overwritten with the provider's real token usage. If nothing succeeds, the reservation is deleted and the client gets a fixed-shape error with a stable code and a request id, never an upstream message.</p>
+      <p><b>Three sentences on why:</b> reserve-then-reconcile is the only way to be exact when output size is unknown up front. <code>asyncio.timeout</code> plus awaited cancellation is what makes the failover race safe. And a single error type with a client-safe message and a log-only detail field is what keeps sanitization from being a per-handler afterthought.</p>
+    </div>
+
+    <section id="lifecycle" class="req">
+      <h2>One request, end to end</h2>
+      <p class="muted">This is the path in <code>ModelRouter.complete</code>. Every requirement hooks into one of these steps.</p>
+      <div class="flow">
+        <div class="dot"></div><div class="step"><b>Identify the tenant</b><span>The API key is hashed with SHA-256 and the digest becomes the ledger key. Raw keys never touch disk. <code>app.py:69</code></span></div>
+        <div class="dot"></div><div class="step"><b>Estimate worst case</b><span>estimate = ceil(prompt_chars / 4) + max_tokens. Prompt is guessed, output is assumed to hit the cap. <code>router.py:79</code></span></div>
+        <div class="dot"></div><div class="step"><b>Reserve</b><span>BEGIN IMMEDIATE → evict rows older than 60s → SUM → compare → INSERT reserved row → COMMIT. Rejects with an exact Retry-After if it doesn't fit. <code>rate_limiter.py:140</code></span></div>
+        <div class="dot"></div><div class="step"><b>Call primary under a 3s deadline</b><span>asyncio.timeout cancels the coroutine at the deadline and waits for the cancellation to land before moving on. <code>router.py:134</code></span></div>
+        <div class="dot"></div><div class="step"><b>Fail over on 429 / timeout / error</b><span>Secondary is called with its own, longer deadline. Reason is recorded for logs and the response. <code>router.py:106</code></span></div>
+        <div class="dot"></div><div class="step"><b>Commit or release</b><span>Success: overwrite the reservation with real input + output tokens. Any failure, including client disconnect: delete the row. Both are shielded from cancellation. <code>router.py:95</code>, <code>:98</code></span></div>
+        <div class="dot last"></div><div class="step"><b>Respond</b><span>Success body includes model, failed_over flag and usage. Error body is always <code>{"error": {code, message, request_id}}</code>. <code>errors.py:76</code></span></div>
+      </div>
+    </section>
+
+    <!-- R1 -->
+    <section id="r1" class="req">
+      <div class="req-head">
+        <div class="req-num">R1</div>
+        <div>
+          <h2>Token-aware sliding-window rate limiter</h2>
+          <blockquote class="spec"><p>Implement a token-aware sliding window rate limiter (e.g., maximum 50,000 tokens/minute per tenant API key).</p></blockquote>
+        </div>
+      </div>
+
+      <h3 id="r1-window">Window and eviction</h3>
+      <div class="grid2">
+        <div>
+          <p><b>Mechanism.</b> The ledger is a true sliding log, not fixed buckets. Each admitted request is one row: tenant, timestamp, tokens, state. Usage is the SUM over rows with <code>ts &gt; now − 60</code>. At the start of every reserve for a tenant, rows at or past the boundary are deleted, so the SUM is always over live rows and the table can't grow without bound.</p>
+          <p><b>Why a log instead of buckets.</b> Fixed one-minute buckets let a tenant spend 50k at 12:00:59 and another 50k at 12:01:01. A sliding log counts both against each other. The cost is one row per request, which SQLite handles trivially at this scale.</p>
+        </div>
+        <div>
+          <div class="locs"><span class="loc">rate_limiter.py:115 _evict</span><span class="loc">rate_limiter.py:127 _retry_after</span></div>
+          <p><b>Retry-After is exact.</b> When a reserve is rejected, the limiter walks the tenant's rows oldest first, summing tokens until the shortfall is covered, and reports when that last row leaves the window. The client gets the earliest guaranteed-safe retry time in both the header and the message.</p>
+          <p><b>Proved by</b> <code>test_sliding_window_evicts_exactly_at_boundary</code>, which rejects at 29.999s and admits at 30.000s with a fake clock, and <code>test_retry_after_accumulates_multiple_rows</code>.</p>
+        </div>
+      </div>
+
+      <h3 id="r1-tokens">Token accounting: reserve, commit, release</h3>
+      <div class="grid2">
+        <div>
+          <p><b>The problem.</b> Completion tokens are unknown until the model answers. A single check-then-count is either unsafe (count after, allow overshoot) or inaccurate (count an estimate forever).</p>
+          <p><b>The mechanism.</b> Two-phase accounting.</p>
+          <ul>
+            <li><b>reserve(estimate)</b> inserts a row in state <code>reserved</code> holding prompt estimate + max_tokens.</li>
+            <li><b>commit(actual)</b> overwrites that row with the provider's reported input + output tokens and flips state to <code>committed</code>. Happens microseconds after the response arrives.</li>
+            <li><b>release()</b> deletes the row when the request produced nothing: both providers failed, or the client disconnected.</li>
+          </ul>
+          <p>The row keeps its admission timestamp through commit, so reconciliation never extends how long the tokens count.</p>
+        </div>
+        <div>
+          <div class="locs"><span class="loc">rate_limiter.py:140 reserve</span><span class="loc">rate_limiter.py:167 commit</span><span class="loc">rate_limiter.py:189 release</span></div>
+          <p><b>Edge case handled.</b> If a request runs longer than the window, its reservation is evicted like any other row. commit notices the UPDATE hit zero rows and re-inserts the real usage at the current time, so consumed tokens are never lost. <code>test_commit_after_eviction_still_counts_tokens</code>.</p>
+          <p><b>Proved by</b> <code>test_commit_reconciles_to_actual_usage</code> (reserve 5000, commit 1234, usage reads 1234), <code>test_release_returns_tokens</code>, and at the HTTP layer <code>test_failed_requests_consume_no_budget</code>.</p>
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">"What if a response is halfway done and crosses 50k?"</div>
+        <p class="a">It can't. The reservation already covers max_tokens, so admission is the only decision point. Truncating mid-response isn't graceful and a second model can't continue another model's partial output, so the design moves the whole decision to before the first token.</p>
+      </div>
+      <div class="qa">
+        <div class="q">"Seven concurrent 8k requests, 50k budget?"</div>
+        <p class="a">Six admit (48k plus small prompt estimates), the seventh gets a 429 before any model is called. Retry-After will say about 60s because it's computed from row expiry, even though the six will reconcile down within seconds. Safe, not tight. A short bounded wait-and-retry in the router would close that gap; I left it out to keep rejection fast.</p>
+      </div>
+
+      <h3 id="r1-concurrency">Concurrency: why two requests can't both squeeze through the last gap</h3>
+      <div class="grid2">
+        <div>
+          <p>Three layers, each for a different scope:</p>
+          <ul>
+            <li><b>BEGIN IMMEDIATE</b> takes SQLite's write lock at transaction start, not at the first write. Evict, SUM, compare and INSERT are atomic across every connection to the file, including other processes.</li>
+            <li><b>asyncio.Lock</b> serializes coroutines on the shared aiosqlite connection so two reserves can't interleave statements inside one transaction.</li>
+            <li><b>WAL mode + busy_timeout</b> make a second process wait up to 5s for the lock instead of getting "database is locked".</li>
+          </ul>
+        </div>
+        <div>
+          <div class="locs"><span class="loc">rate_limiter.py:146 BEGIN IMMEDIATE</span><span class="loc">rate_limiter.py:86 asyncio.Lock</span><span class="loc">rate_limiter.py:91 WAL</span></div>
+          <p><b>Proved by</b> <code>test_concurrent_burst_admits_exactly_the_budget</code>: 40 coroutines each reserving 5000 against 50k; exactly 10 succeed. And <code>test_two_connections_same_file_serialize</code>: 30 reserves split across two independent connections; still exactly 10.</p>
+        </div>
+      </div>
+      <div class="qa">
+        <div class="q">"Why not BEGIN DEFERRED?"</div>
+        <p class="a">Deferred takes a read lock first and upgrades on write. Two transactions can both read SUM = 45k, both decide 5k fits, and one fails on upgrade with SQLITE_BUSY, or worse, both succeed if the check and write are in different statements. IMMEDIATE makes the read part of the write lock.</p>
+      </div>
+    </section>
+
+    <!-- R2 -->
+    <section id="r2" class="req">
+      <div class="req-head">
+        <div class="req-num">R2</div>
+        <div>
+          <h2>Failover on 429 or 3000ms timeout</h2>
+          <blockquote class="spec"><p>If the primary model endpoint returns a 429 Too Many Requests status or times out after 3000ms, automatically failover to a secondary backup model provider.</p></blockquote>
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <p><b>Mechanism.</b> Providers implement one method and may only raise two exception types: <code>ProviderRateLimited</code> for 429 and <code>ProviderError</code> for everything else. The router wraps the primary call in <code>asyncio.timeout(3.0)</code>. Three except clauses decide failover:</p>
+          <ul>
+            <li><code>ProviderRateLimited</code> → reason <code>primary_429</code></li>
+            <li><code>TimeoutError</code> → reason <code>primary_timeout</code></li>
+            <li><code>ProviderError</code> (5xx, connection error, adapter bug) → reason <code>primary_error_*</code>. This is an extension beyond the spec; retrying on another provider is the safe move in every such case.</li>
+          </ul>
+          <p>The secondary runs under its own, longer deadline (10s). If it also fails, the router raises the matching gateway error. It never loops back to the primary.</p>
+        </div>
+        <div>
+          <div class="locs"><span class="loc">router.py:106 _call_with_failover</span><span class="loc">router.py:134 asyncio.timeout</span><span class="loc">providers.py:127 max_retries=0</span></div>
+          <p><b>The race condition, and why it's closed.</b> The dangerous case is the primary answering at 3.2s while the secondary is already running, and both results reaching the ledger. <code>asyncio.timeout</code> raises CancelledError inside the primary coroutine and does not exit until that cancellation has propagated. So when control reaches the secondary call, the primary can no longer produce a value. Exactly one result exists per request.</p>
+          <p><b>SDK retries are off.</b> The Anthropic adapter sets <code>max_retries=0</code>. Otherwise the SDK would silently retry a 429 with backoff, eating the failover signal and stretching the call past the 3s deadline.</p>
+        </div>
+      </div>
+      <p><b>Proved by</b> <code>test_primary_429_fails_over</code>, <code>test_primary_timeout_fails_over_and_cancels_primary</code> (asserts the primary saw a cancellation and never completed), <code>test_slow_primary_result_after_deadline_is_discarded</code> (primary set to succeed at 0.1s under a 0.05s deadline; only secondary's tokens are in the ledger), <code>test_primary_within_deadline_wins</code>, and <code>test_both_fail_raises_sanitized_error_and_releases_reservation</code>.</p>
+      <div class="qa">
+        <div class="q">"Why asyncio.timeout rather than the HTTP client's timeout?"</div>
+        <p class="a">A client-level timeout covers the socket, not the whole call. It can't cancel a coroutine that's stuck between retries or in JSON parsing, and its error type varies per library. asyncio.timeout bounds the entire await and gives one exception type to match on.</p>
+      </div>
+      <div class="qa">
+        <div class="q">"What about the client disconnecting mid-call?"</div>
+        <p class="a">The handler's task is cancelled. The router catches BaseException, releases the reservation under asyncio.shield so the DB write completes even though the task is dying, then re-raises. <code>test_client_disconnect_releases_reservation</code>.</p>
+      </div>
+    </section>
+
+    <!-- R3 -->
+    <section id="r3" class="req">
+      <div class="req-head">
+        <div class="req-num">R3</div>
+        <div>
+          <h2>Standardized error payload, no leakage</h2>
+          <blockquote class="spec"><p>Ensure error responses return a standardized gateway error payload without leaking raw upstream stack traces or internal implementation details.</p></blockquote>
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <p><b>Mechanism.</b> One base class, <code>GatewayError</code>, with two separate text fields: <code>message</code> is client-safe and defaults to a fixed string per subclass; <code>detail</code> is log-only and holds the upstream reason. The wire shape is produced in exactly one function.</p>
+<pre><code>{"error": {"code": "UPSTREAM_TIMEOUT",
+           "message": "The model providers did not respond in time. Please retry.",
+           "request_id": "46afb031bd134ae2"}}</code></pre>
+          <p>Headers: <code>X-Request-ID</code> always, <code>Retry-After</code> when meaningful. The request id is also in every server log line, so an operator can find the upstream detail that the client was not shown.</p>
+        </div>
+        <div>
+          <div class="locs"><span class="loc">errors.py:22 GatewayError</span><span class="loc">errors.py:76 error_response</span><span class="loc">errors.py:88–103 handlers</span></div>
+          <p><b>Three handlers cover every path:</b></p>
+          <ul>
+            <li><code>GatewayError</code>: known outcomes. Logs detail, returns message.</li>
+            <li><code>RequestValidationError</code>: pydantic failures. Only field <i>names</i> are echoed, never submitted values, so a client can't reflect content back through an error.</li>
+            <li><code>Exception</code>: anything unexpected. Logs the traceback, returns the generic INTERNAL_ERROR body. Without this, FastAPI's default 500 page is the leak.</li>
+          </ul>
+          <p>Providers also sanitize at the boundary: every SDK exception is converted to <code>ProviderError</code> with the raw text in <code>detail</code>. <code>providers.py:142–148</code>.</p>
+        </div>
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Code</th><th class="num">HTTP</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>INVALID_REQUEST</td><td class="num">400</td><td>Body fails validation or max_tokens exceeds the cap</td></tr>
+          <tr><td>UNAUTHORIZED</td><td class="num">401</td><td>Missing or too-short X-API-Key</td></tr>
+          <tr><td>REQUEST_TOO_LARGE</td><td class="num">413</td><td>Estimate alone exceeds the whole window; waiting would never help</td></tr>
+          <tr><td>TENANT_RATE_LIMITED</td><td class="num">429</td><td>Window full; Retry-After is exact</td></tr>
+          <tr><td>UPSTREAM_ERROR</td><td class="num">502</td><td>Secondary failed with a non-429, non-timeout error</td></tr>
+          <tr><td>UPSTREAM_RATE_LIMITED</td><td class="num">503</td><td>Both providers returned 429</td></tr>
+          <tr><td>UPSTREAM_TIMEOUT</td><td class="num">504</td><td>Secondary timed out</td></tr>
+          <tr><td>INTERNAL_ERROR</td><td class="num">500</td><td>Unhandled exception; traceback logged, never sent</td></tr>
+        </tbody>
+      </table></div>
+      <p><b>Proved by</b> <code>assert_error_shape</code> in <code>test_app.py</code>, which every error test runs. It checks the body has exactly one key, that key has exactly three fields, the request id matches the header, and none of "traceback", "stack", "exception", "mock", "sqlite" or the mock provider's fake trace string appear anywhere in the response text. <code>test_unhandled_exception_is_sanitized</code> forces a TypeError inside the handler and checks the same.</p>
+    </section>
+
+    <!-- R4 -->
+    <section id="r4" class="req">
+      <div class="req-head">
+        <div class="req-num">R4</div>
+        <div>
+          <h2>SQLite on disk</h2>
+          <blockquote class="spec"><p>Use on disk sqlite for database.</p></blockquote>
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <p><b>Mechanism.</b> <code>aiosqlite</code> over a file path from <code>GATEWAY_DB_PATH</code>. The connection runs in autocommit mode so the limiter issues its own <code>BEGIN IMMEDIATE</code> / <code>COMMIT</code> and controls exactly what's atomic. Schema is one table plus an index on (tenant, ts), which is the access pattern for every query.</p>
+          <p><b>Why aiosqlite rather than sqlite3.</b> The stdlib driver blocks the event loop on every call. aiosqlite runs the connection in a worker thread and exposes awaitables, so a slow disk write doesn't stall other requests.</p>
+        </div>
+        <div>
+          <div class="locs"><span class="loc">rate_limiter.py:89–94 open()</span></div>
+          <p><b>Pragmas and why:</b></p>
+          <ul>
+            <li><code>journal_mode=WAL</code>: readers don't block the writer; safe for several uvicorn workers on one file.</li>
+            <li><code>synchronous=NORMAL</code>: fsync at checkpoint rather than every commit. Durable against process crash; a power loss could lose the last few rows, which for a rate limiter is acceptable.</li>
+            <li><code>busy_timeout=5000</code>: contention waits rather than errors.</li>
+          </ul>
+          <p><b>Proved by</b> <code>test_state_survives_reopen</code> (close, reopen, usage intact and limit still enforced) and the two-connection test above.</p>
+        </div>
+      </div>
+      <div class="qa">
+        <div class="q">"Would this scale?"</div>
+        <p class="a">One writer at a time is SQLite's ceiling, but a reserve is a few microseconds of work under the lock, so thousands per second per node is realistic. Past a single node the same two-phase ledger maps directly onto Redis with a Lua script or Postgres with SELECT FOR UPDATE. The interface wouldn't change.</p>
+      </div>
+    </section>
+
+    <!-- Criteria -->
+    <section id="criteria" class="req">
+      <h2>Evaluation criteria, mapped</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Criterion</th><th>What they'll look for</th><th>Where it lives</th></tr></thead>
+        <tbody>
+          <tr><td>Async concurrency &amp; timeout races</td><td>Real cancellation, no leaked tasks, one result per request, cleanup survives cancellation</td><td>router.py:95, :98, :134 · tests: timeout, slow-primary-discarded, client-disconnect, concurrent-requests</td></tr>
+          <tr><td>Rate-limiter eviction &amp; token tracking</td><td>Boundary exactness, no unbounded growth, actual not estimated usage, atomic check-and-insert</td><td>rate_limiter.py:115, :140, :167 · tests: boundary, retry-after, reconcile, eviction-then-commit, bursts</td></tr>
+          <tr><td>Graceful fallback &amp; error sanitization</td><td>Every failure path ends in the one wire shape; upstream text never escapes; failover reason is observable</td><td>errors.py:76–103, providers.py:142–148 · tests: assert_error_shape across all error tests</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- Trade-offs -->
+    <section id="tradeoffs" class="req">
+      <h2>Trade-offs to volunteer before they ask</h2>
+      <div class="callout">
+        <div class="eyebrow">Conservative reservation</div>
+        <p>Reserving max_tokens means a tenant asking for 8k and using 1k briefly holds 8k. Concurrent requests during those few seconds may be rejected when the real numbers would have fit. Mitigations: cap max_tokens per request (already configurable, default 8,192), or reserve prompt + a typical completion size and accept small overshoots. I chose exactness because the brief scores token accuracy.</p>
+      </div>
+      <div class="callout">
+        <div class="eyebrow">Retry-After is safe, not tight</div>
+        <p>Computed from row expiry only, so in a burst it can say 60s when 3s would work. A bounded wait-and-retry inside reserve would fix it at the cost of holding a connection open.</p>
+      </div>
+      <div class="callout">
+        <div class="eyebrow">Prompt estimate is chars ÷ 4</div>
+        <p>Good enough because it's always overwritten by the real count. The exact alternative is the provider's count_tokens endpoint, which adds a round trip per request.</p>
+      </div>
+      <div class="callout">
+        <div class="eyebrow">No streaming</div>
+        <p>Responses are atomic, which is what makes the failover decision clean. Streaming failover after first byte is a different problem: you can end the stream with an error event, but you can't splice in a second model.</p>
+      </div>
+      <div class="callout">
+        <div class="eyebrow">Failover on 5xx is beyond the spec</div>
+        <p>The brief names 429 and timeout. I also fail over on other upstream errors and adapter crashes because the alternative is failing a request that the secondary could have served. Easy to narrow if the reviewer wants strict compliance.</p>
+      </div>
+    </section>
+
+    <!-- Tests -->
+    <section id="tests" class="req">
+      <h2>Test inventory</h2>
+      <p class="muted">33 tests, about one second. A fake clock makes the 60-second window testable without sleeping; provider timeouts are injected at 50ms.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>File</th><th class="num">Tests</th><th>Covers</th></tr></thead>
+        <tbody>
+          <tr><td>test_rate_limiter.py</td><td class="num">11</td><td>Limit enforcement, tenant isolation, boundary eviction, retry-after math, reconcile, release, eviction-then-commit, oversize rejection, single-connection burst, persistence across reopen, two-connection burst</td></tr>
+          <tr><td>test_router.py</td><td class="num">12</td><td>Primary success, 429 failover, timeout failover with cancellation, late primary discarded, fast primary wins, 5xx failover, adapter crash, three both-fail variants, tenant limit blocks before any call, client disconnect, concurrent budget</td></tr>
+          <tr><td>test_app.py</td><td class="num">10</td><td>Success shape, missing key, validation shape, mock-header failover, both-429 sanitized, both-timeout sanitized, failed requests cost nothing, tenant 429 with Retry-After and 413, unhandled exception sanitized</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+</div>
