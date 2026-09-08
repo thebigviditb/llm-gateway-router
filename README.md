@@ -94,7 +94,3 @@ are never written to disk.
   ignored unless `GATEWAY_UPSTREAM=mock`.
 - No streaming. Streaming failover after first byte is a different problem (you cannot switch
   providers mid-response) and is out of scope.
-
-## Requirement traceability
-
-A requirement-by-requirement map of the implementation (mechanism, code lines, tests, likely questions) is in [docs/traceability.html](docs/traceability.html). Open it in a browser.
